@@ -1,5 +1,5 @@
 from fastapi import FastAPI,UploadFile,File
-from app.rag import load_and_split_pdf
+from app.rag import load_and_split_pdf,create_vector_store
 import os
 import shutil
 
@@ -12,12 +12,13 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 def home():
     return {"message": "Welcome to the RAG Document Chatbot API!"}
 
-@app.post("/chat")
+@app.post("/upload/")
 def upload_document_and_split(file:UploadFile = File(...)):
     file_path = os.path.join(UPLOAD_DIR, file.filename)
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
     chunks = load_and_split_pdf(file_path)
-    return  {  "filename": file.filename,  "num_chunks": len(chunks)}
+    num_chunks = create_vector_store(chunks)
+    return  {  "filename": file.filename,  "num_chunks": num_chunks,"message":"Vector store created successfully!"}
    
