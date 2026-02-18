@@ -1,5 +1,5 @@
-from fastapi import FastAPI,UploadFile,File
-from app.rag import load_and_split_pdf,create_vector_store
+from fastapi import FastAPI,UploadFile,File,Form
+from app.rag import load_and_split_pdf,create_vector_store,get_qa_chain
 import os
 import shutil
 
@@ -22,3 +22,12 @@ def upload_document_and_split(file:UploadFile = File(...)):
     num_chunks = create_vector_store(chunks)
     return  {  "filename": file.filename,  "num_chunks": num_chunks,"message":"Vector store created successfully!"}
    
+@app.post("/ask/")
+def ask_question(question: str = Form(...)):
+    chain = get_qa_chain()
+    answer = chain.invoke(question)
+
+    return {
+        "question": question,
+        "answer": answer
+    }
