@@ -29,7 +29,7 @@ A Retrieval-Augmented Generation (RAG) chatbot that allows users to upload PDF d
 
 ## Installation
 ```bash
-git clone <repo-url>
+git clone https://github.com/akshaytony555/rag_document_chatbot.git
 cd rag_document_chatbot
 python -m venv venv
 venv\Scripts\activate
